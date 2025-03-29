@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 3.0 COMPONENTS Graphics Window System REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(Threads REQUIRED)
 
 file(GLOB_RECURSE SOURCES
     src/*.cpp
@@ -25,11 +24,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     SFML::Window
     SFML::System
     OpenGL::GL
-    Threads::Threads
     ${CMAKE_DL_LIBS}
 )
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -O3 -march=native -flto)
-    set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
-endif()
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -O3 -march=native -flto)
+set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
