@@ -1,38 +1,35 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
+project(editor LANGUAGES CXX)
 
-# Project name
-project(editor)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Define paths for SFML libraries and headers in the project directory
-set(SFML_LIB_DIR "/usr/lib") # Set the correct path for SFML libraries
-set(IMGUI_INCLUDE_DIR "./include/imgui")
-set(SFML_INCLUDE_DIR "/usr/include/SFML") # Set the correct path for SFML headers
+find_package(SFML 3.0 COMPONENTS Graphics Window System REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(Threads REQUIRED)
 
-# Definition of SFML libraries
-find_library(SFML_GRAPHICS_LIBRARY NAMES sfml-graphics PATHS ${SFML_LIB_DIR})
-find_library(SFML_WINDOW_LIBRARY NAMES sfml-window PATHS ${SFML_LIB_DIR})
-find_library(SFML_SYSTEM_LIBRARY NAMES sfml-system PATHS ${SFML_LIB_DIR})
+file(GLOB_RECURSE SOURCES
+    src/*.cpp
+    include/imgui/*.cpp
+)
 
-# Check if all libraries were found
-if(NOT SFML_GRAPHICS_LIBRARY OR NOT SFML_WINDOW_LIBRARY OR NOT SFML_SYSTEM_LIBRARY)
-    message(FATAL_ERROR "SFML libraries not found. Please ensure SFML is installed and paths are correct.")
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/imgui
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    SFML::Graphics
+    SFML::Window
+    SFML::System
+    OpenGL::GL
+    Threads::Threads
+    ${CMAKE_DL_LIBS}
+)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -O3 -march=native -flto)
+    set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
-
-set(SFML_LIBRARIES ${SFML_GRAPHICS_LIBRARY} ${SFML_WINDOW_LIBRARY} ${SFML_SYSTEM_LIBRARY} pthread dl GL)
-
-# Add the executable and include all .cpp files in src/ and its subfolders
-file(GLOB_RECURSE SRC_FILES src/*.cpp)
-
-# Include header directories
-include_directories(${SFML_INCLUDE_DIR})
-include_directories(${IMGUI_INCLUDE_DIR})
-include_directories(include)
-
-# Add the executable
-add_executable(${PROJECT_NAME} ${SRC_FILES})
-
-# Link SFML to the libraries
-target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
-
-target_compile_options(${PROJECT_NAME} PRIVATE -O3 -march=native -flto)
-set_property(TARGET ${PROJECT_NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
