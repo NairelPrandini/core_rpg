@@ -1,7 +1,7 @@
 #include <core/app.h>
 #include <scenes/main_menu.h>
 
-sf::Vector2u windowSize = {1600, 900};
+sf::Vector2u windowSize = {1080, 720};
 sf::State windowStyle = sf::State::Windowed;
 sf::RenderWindow window;
 sf::Clock deltaClock;
@@ -63,7 +63,7 @@ void App::HandleEvents()
 
 void App::Update()
 {
-    // Update Deltative
+    // Update Deltatime
     sf::Time dt = deltaClock.restart();
     ImGui::SFML::Update(window, dt);
 

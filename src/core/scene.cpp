@@ -16,12 +16,12 @@ void Scene::AddEntity(Entity *entity)
 
 void Scene::RemoveEntity(int entityID)
 {
-    for (auto it = entities.begin(); it != entities.end(); ++it)
+    for (auto i = entities.begin(); i != entities.end(); i++)
     {
-        if ((*it)->GetID() == entityID)
+        if ((*i)->GetID() == entityID)
         {
-            delete *it;
-            entities.erase(it);
+            delete *i;
+            entities.erase(i);
             break;
         }
     }
