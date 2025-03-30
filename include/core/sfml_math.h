@@ -1,5 +1,4 @@
-#ifndef SFML_MATH_H
-#define SFML_MATH_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
 
@@ -19,5 +18,3 @@ inline float Floor(float value)
     int i = static_cast<int>(value);
     return (value < i) ? i - 1 : i;
 }
-
-#endif // SFML_MATH_H
